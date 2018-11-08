@@ -1,0 +1,46 @@
+package com.kbs.dna.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.kbs.dna.dao.BDao;
+import com.kbs.dna.dto.BDto;
+import com.kbs.dna.dto.BFacebookArticleDto;
+import com.kbs.dna.dto.BHomepageArticleDto;
+import com.kbs.dna.dto.BHomepagePvDto;
+import com.kbs.dna.dto.BNaverArticleDto;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+public class BReportCommand implements BCommand {
+
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+
+		String dt = request.getParameter("dt");
+	
+		// 파라미터로 날짜 데이터를 받지 않는 경우에는 오늘 날짜로 세팅 
+		if(dt == null || dt == ""){
+			dt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		}
+		
+		BDao dao = new BDao();
+		
+		BDto dto = dao.briefingReportView(dt);
+		ArrayList<BHomepagePvDto> homepagePvDtos = dao.homepagePvView(dt); 
+		ArrayList<BHomepageArticleDto> homepageArticleDtos = dao.homepageArticleView(dt);
+		ArrayList<BNaverArticleDto> naverArticleDtos = dao.naverArticleView(dt);
+		ArrayList<BFacebookArticleDto> facebookArticleDtos = dao.facebookArticleView(dt);
+		
+		request.setAttribute("briefReport_view", dto);
+		request.setAttribute("homepagePv_view", homepagePvDtos);
+		request.setAttribute("homepageArticle_view", homepageArticleDtos);
+		request.setAttribute("naverArticel_view", naverArticleDtos);
+		request.setAttribute("facebookArticle_view", facebookArticleDtos);
+		
+	}
+
+}

@@ -1,0 +1,294 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>DNA - Digital News Analysis </title>
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>    
+</head>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="index.html">디지털뉴스 일일보고</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="report_view.do">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">일일보고</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
+          <a class="nav-link" href="list.do">
+		  <!-- <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion"> -->
+            <i class="fa fa-fw fa-file"></i>
+            <span class="nav-link-text">회의 자료 입력(관리자용)</span>
+          </a>          
+        </li>        
+      </ul>
+      <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">        
+      </ul>
+    </div>
+  </nav>
+<div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">${content_view.dt}</a>
+        </li>
+        <li class="breadcrumb-item active"> 공정률 : 60% | 의견주시면 적극 반영 검토하겠습니다~ (to : 박재호 felix@kbs.co.kr)  </li>
+      </ol>
+      <!-- Icon Cards-->
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Example Area Chart Card-->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-bar-chart"></i> 홈페이지 페이지뷰 </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4 text-center my-auto">
+                 <div class="h4 mb-0 text-primary"> ${homepagePv_view[0].mo} </div>
+                  <div class="small text-muted">Mobile</div>
+                  <hr>
+                   <div class="h4 mb-0 text-warning"> ${homepagePv_view[0].pc} </div>
+                  <div class="small text-muted">PC</div>
+                  <hr>
+                  <div class="h4 mb-0 text-success"> ${homepagePv_view[0].total} </div>
+                  <div class="small text-muted">Total</div> 
+                </div>
+                
+                <div class="col-sm-8 my-auto">
+                <!--  그래프 자바스크립트  -->
+				<script type="text/javascript">
+				      google.charts.load('current', {'packages':['corechart']});
+				      google.charts.setOnLoadCallback(drawChart);
+				
+				      function drawChart() {
+				    	  
+				        var data = google.visualization.arrayToDataTable([
+				          ['date', 'mo' , 'pc', 'mo+pc'],
+				          ['${homepagePv_view[6].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[6].mo}, ${homepagePv_view[6].pc}, ${homepagePv_view[6].total}],
+				          ['${homepagePv_view[5].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[5].mo}, ${homepagePv_view[5].pc}, ${homepagePv_view[5].total}],
+				          ['${homepagePv_view[4].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[4].mo}, ${homepagePv_view[4].pc}, ${homepagePv_view[4].total}],
+				          ['${homepagePv_view[3].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[3].mo}, ${homepagePv_view[3].pc}, ${homepagePv_view[3].total}],
+				          ['${homepagePv_view[2].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[2].mo}, ${homepagePv_view[2].pc}, ${homepagePv_view[2].total}],
+				          ['${homepagePv_view[1].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[1].mo}, ${homepagePv_view[1].pc}, ${homepagePv_view[1].total}],
+				          ['${homepagePv_view[0].dt}'.replace('2018-','').replace('-','/'),  ${homepagePv_view[0].mo}, ${homepagePv_view[0].pc}, ${homepagePv_view[0].total}]
+				        ]);
+				
+				        var options = {
+				          title: '홈페이지 PV 추이',
+				          curveType: 'function',
+				          legend: { position: 'bottom' }
+				        };
+				
+				        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+				        chart.draw(data, options);
+				      }
+				    </script>
+                  <div id="curve_chart" style="width: 100; height: 50"></div>
+                </div>                
+              </div>
+            </div>
+            <div class="card-footer small text-muted">기준 : ${homepagePv_view[0].dt}</div>
+          </div>          
+        </div>
+      </div>
+      <!-- 홈페이지 주요 기사-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> 홈페이지 주요 기사</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>인기기사</th>
+                  <th>출처</th>
+                  <th>기자</th>
+                  <th>페이지뷰</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${homepageArticle_view}" var="dto">
+                <tr>                  
+                  <td><a href="${dto.url}" target="_blank">${dto.title}</a></td>
+                  <td>${dto.source}</td>
+                  <td>${dto.writer}</td>
+                  <td>${dto.pv}</td>                  
+                </tr>
+                </c:forEach>	                
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">기준 : </div>
+      </div>
+      <!-- 네이버 주요 기사-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> 네이버 주요 기사</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>모바일 인기기사</th>
+                  <th>분야</th>
+                  <th>최고순위</th>
+                  <th>조회수</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${naverArticel_view}" var="naverArticle_dto">
+                <tr>                  
+                  <td><a href="${naverArticle_dto.url}" target="_blank">${naverArticle_dto.title}</a></td>
+                  <td>${naverArticle_dto.category}</td>
+                  <td>${naverArticle_dto.rank}</td>
+                  <td>${naverArticle_dto.pv}</td>                  
+                </tr>
+                </c:forEach>	                
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">기준 : </div>
+      </div>
+      <!-- 페이스북 주요 기사-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> 페이스북 주요 기사</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>인기기사</th>
+                  <th>계정</th>
+                  <th>공감</th>
+                  <th>공유</th>
+                  <th>도달</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${facebookArticle_view}" var="dto">
+                <tr>                  
+                  <td>${dto.title}</td>
+                  <td>${dto.account}</td>
+                  <td>${dto.reaction}</td>
+                  <td>${dto.shared}</td>
+                  <td>${dto.pv}</td>                  
+                </tr>
+                </c:forEach>	                
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">기준 : </div>
+      </div>      
+      <!-- 회의자료 -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> 디지털 회의 자료</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>분류</th>
+                  <th>내용</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr>                  
+                  <td>디지털 관심 아이템</td>
+                  <td>${briefReport_view.interestReport}</td>
+                </tr>
+                <tr>
+				  <td> 취재부서 출고 기사 </td>
+				  <td> ${briefReport_view.coverReport}</td>
+				</tr>
+				<tr>
+				  <td> 디지털 출고 기사 </td>
+				  <td> ${briefReport_view.digitalReport}</td>
+				</tr>                	                
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div>
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © KBS digital news 2018</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+    <!-- Custom scripts for this page-->
+    <script src="js/sb-admin-datatables.min.js"></script>
+    <script src="js/sb-admin-charts.min.js"></script>
+  </div>
+</body>
+</html>

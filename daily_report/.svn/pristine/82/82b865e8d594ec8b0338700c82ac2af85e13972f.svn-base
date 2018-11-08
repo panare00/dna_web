@@ -1,0 +1,53 @@
+package com.kbs.dna.dto;
+
+public class BHomepagePvDto {
+
+	String dt;
+	int mo;
+	int pc;
+	int total;
+
+	public BHomepagePvDto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public BHomepagePvDto(String dt, int mo, int pc, int total) {
+		super();
+		this.dt = dt;
+		this.mo = mo;
+		this.pc = pc;
+		this.total = total;
+	}
+
+	public String getDt() {
+		return dt;
+	}
+
+	public void setDt(String dt) {
+		this.dt = dt;
+	}
+
+	public int getMo() {
+		return mo;
+	}
+
+	public void setMo(int mo) {
+		this.mo = mo;
+	}
+
+	public int getPc() {
+		return pc;
+	}
+
+	public void setPc(int pc) {
+		this.pc = pc;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+}

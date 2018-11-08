@@ -1,0 +1,514 @@
+package com.kbs.dna.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import com.kbs.dna.dto.BDto;
+import com.kbs.dna.dto.BFacebookArticleDto;
+import com.kbs.dna.dto.BHomepageArticleDto;
+import com.kbs.dna.dto.BHomepagePvDto;
+import com.kbs.dna.dto.BNaverArticleDto;
+
+public class BDao {
+
+	DataSource dataSource;
+	
+	public BDao() {
+		// TODO Auto-generated constructor stub
+		
+		try {
+			Context context = new InitialContext();
+			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/mySQLDB");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public void write(String dt, String interestReport, String coverReport, String digitalReport) {
+		// TODO Auto-generated method stub
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			String query = "insert into report_briefing (dt, interestReport, coverReport, digitalReport) values (?, ?, ?, ? )";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, dt);
+			preparedStatement.setString(2, interestReport);
+			preparedStatement.setString(3, coverReport);
+			preparedStatement.setString(4, digitalReport);
+			int rn = preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public ArrayList<BDto> list() {
+		
+		ArrayList<BDto> dtos = new ArrayList<BDto>();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String query = "select dt, interestReport, coverReport, digitalReport from report_briefing order by dt desc;";
+			preparedStatement = connection.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				String dt = resultSet.getString("dt");
+				String interestReport = resultSet.getString("interestReport");
+				String coverReport = resultSet.getString("coverReport");
+				String digitalReport = resultSet.getString("digitalReport");
+				
+				BDto dto = new BDto(dt, interestReport, coverReport, digitalReport);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+	
+	public BDto contentView(String strDT) {
+		// TODO Auto-generated method stub
+		
+		BDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from report_briefing where dt = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, strDT);
+			//preparedStatement.setInt(1, Integer.parseInt(strID));
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				String dt = resultSet.getString("dt");
+				String interestReport = resultSet.getString("interestReport");
+				String coverReport = resultSet.getString("coverReport");
+				String digitalReport = resultSet.getString("digitalReport");
+				
+				interestReport = interestReport.replace("<br>","\r\n");
+				coverReport = coverReport.replace("<br>","\r\n");
+				digitalReport = digitalReport.replace("<br>","\r\n");
+				
+				dto = new BDto(dt, interestReport, coverReport, digitalReport);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}
+	
+	public void modify(String dt, String interestReport, String coverReport, String digitalReport) {
+		// TODO Auto-generated method stub
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String query = "update report_briefing set interestReport = ?, coverReport = ?, digitalReport = ? where dt = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, interestReport);
+			preparedStatement.setString(2, coverReport);
+			preparedStatement.setString(3, digitalReport);
+			preparedStatement.setString(4, dt);
+			int rn = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+	
+	public void delete(String dt) {
+		// TODO Auto-generated method stub
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			
+			connection = dataSource.getConnection();
+			String query = "delete from report_briefing where dt = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, dt);
+			int rn = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+	
+	public BDto briefingReportView(String strDT) {
+		// TODO Auto-generated method stub
+		
+		BDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from report_briefing where dt = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, strDT);
+			//preparedStatement.setInt(1, Integer.parseInt(strID));
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				String dt = resultSet.getString("dt");
+				String interestReport = resultSet.getString("interestReport");
+				String coverReport = resultSet.getString("coverReport");
+				String digitalReport = resultSet.getString("digitalReport");
+				
+				dto = new BDto(dt, interestReport, coverReport, digitalReport);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}
+	
+	/*public BHomepagePvDto homepagePvView(String strDT) {
+		
+		
+		String sPreviousDay = calculatePreviousDay(strDT);
+		
+		BHomepagePvDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from homepage_pv where dt = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, sPreviousDay);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				String dt = resultSet.getString("dt");
+				int mo = resultSet.getInt("mo");
+				int pc = resultSet.getInt("pc");
+				int total = resultSet.getInt("total");
+				
+				dto = new BHomepagePvDto(dt, mo, pc, total);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}*/
+	public ArrayList<BHomepagePvDto> homepagePvView(String strDT) {
+		
+		String startDate = calculatePreviousDay(strDT , 8);
+		String endDate = calculatePreviousDay(strDT , 1);
+		
+		ArrayList<BHomepagePvDto> dtos = new ArrayList<BHomepagePvDto>();
+		BHomepagePvDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from homepage_pv where ? <= dt and dt <= ? order by dt desc";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, startDate);
+			preparedStatement.setString(2, endDate);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				String dt = resultSet.getString("dt");
+				int mo = resultSet.getInt("mo");
+				int pc = resultSet.getInt("pc");
+				int total = resultSet.getInt("total");
+				
+				dto = new BHomepagePvDto(dt, mo, pc, total);
+				
+				dtos.add(dto);				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+		
+	public ArrayList<BHomepageArticleDto> homepageArticleView(String strDT) {		
+		
+		// 전날 날짜 받아오기 
+		String sPreviousDay = calculatePreviousDay(strDT, 1);
+				
+		ArrayList<BHomepageArticleDto> dtos = new ArrayList<BHomepageArticleDto>();
+		BHomepageArticleDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from homepage_article where dt = ? order by pv desc";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, sPreviousDay);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				String title = resultSet.getString("title");
+				String url = resultSet.getString("url");
+				String dt = resultSet.getString("dt");
+				String source = resultSet.getString("source");
+				String writer = resultSet.getString("writer");				
+				int pv = resultSet.getInt("pv");
+				
+				dto = new BHomepageArticleDto(title, url, dt, source, writer, pv);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+	
+	public ArrayList<BNaverArticleDto> naverArticleView(String strDT) {		
+		
+		// 전날 날짜 받아오기 
+		String sPreviousDay = calculatePreviousDay(strDT, 1);
+		
+		ArrayList<BNaverArticleDto> dtos = new ArrayList<BNaverArticleDto>();
+		BNaverArticleDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from naver_article where dt = ? order by pv desc";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, sPreviousDay);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				String title = resultSet.getString("title");
+				String url = resultSet.getString("url");
+				String dt = resultSet.getString("dt");
+				String category = resultSet.getString("category");
+				int rank = resultSet.getInt("rank");
+				int pv = resultSet.getInt("pv");
+				
+				dto = new BNaverArticleDto(title, url, dt, category, rank, pv);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+	
+	public ArrayList<BFacebookArticleDto> facebookArticleView(String strDT) {		
+		
+		// 전날 날짜 받아오기 
+		String sPreviousDay = calculatePreviousDay(strDT, 1);
+		
+		ArrayList<BFacebookArticleDto> dtos = new ArrayList<BFacebookArticleDto>();
+		BFacebookArticleDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from facebook_article where dt = ? order by pv desc";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, sPreviousDay);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				String title = resultSet.getString("title");
+				String account = resultSet.getString("account");
+				String dt = resultSet.getString("dt");
+				int reaction = resultSet.getInt("reaction");
+				int shared = resultSet.getInt("shared");
+				int pv = resultSet.getInt("pv");
+				
+				dto = new BFacebookArticleDto(title, account, dt, reaction, shared, pv);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+	
+	public String calculatePreviousDay(String dt, int day){
+		
+		String sDay = null;
+		String sPreviousDay = null;
+		long lCurTime;
+		
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.KOREA);
+		java.util.Date dDate = new java.util.Date();
+		
+		try {
+			dDate = sdf.parse(dt);
+			sDay = sdf.format(dDate);
+			lCurTime = dDate.getTime();
+			dDate = new java.util.Date(lCurTime+(1000*60*60*24*- day ));
+			sPreviousDay = sdf.format(dDate);     
+			
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+		
+		return sPreviousDay;
+	}
+}

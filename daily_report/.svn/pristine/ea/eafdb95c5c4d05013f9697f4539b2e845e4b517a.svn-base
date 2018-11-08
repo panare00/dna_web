@@ -1,0 +1,74 @@
+package com.kbs.dna.dto;
+
+public class BHomepageArticleDto {
+	
+	String title;
+	String url;
+	String dt;
+	String source;
+	String writer;
+	int pv;
+	
+	public BHomepageArticleDto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public BHomepageArticleDto(String title, String url, String dt, String source, String writer, int pv) {
+		super();
+		this.title = title;
+		this.url = url;
+		this.dt = dt;
+		this.source = source;
+		this.writer = writer;
+		this.pv = pv;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getDt() {
+		return dt;
+	}
+
+	public void setDt(String dt) {
+		this.dt = dt;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getWriter() {
+		return writer;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
+	public int getPv() {
+		return pv;
+	}
+
+	public void setPv(int pv) {
+		this.pv = pv;
+	}
+		
+}
