@@ -27,7 +27,8 @@
           <div class="dropdown-menu" aria-labelledby="pagesDropdown">
             <!-- <h6 class="dropdown-header">관리자만 입력!</h6> -->
             <a class="dropdown-item" href="write_view.do">관심 아이템/출고 기사</a>                        
-            <a class="dropdown-item" href="naver_write_view.do">네이버 지표</a>
+            <a class="dropdown-item" href="naver_write_view.do">네이버 지표 입력</a>
+            <a class="dropdown-item" href="daum_write_view.do">다음 지표 입력</a>
             <!-- <div class="dropdown-divider"></div> -->            
           </div>
         </li>                       

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kbs.dna.dao.BDao;
+import com.kbs.dna.dto.BDaumNewsDto;
 import com.kbs.dna.dto.BDto;
 import com.kbs.dna.dto.BFacebookNewsDto;
 import com.kbs.dna.dto.BHomepageNewsDto;
@@ -39,6 +40,7 @@ public class BReportCommand implements BCommand {
 		ArrayList<BHomepagePvDto> homepagePvDtos = dao.homepagePvView(dt); 
 		ArrayList<BHomepageNewsDto> homepageArticleDtos = dao.homepageNewsView(dt, homepageArticle_count);
 		ArrayList<BNaverNewsDto> naverNewsDtos = dao.naverNewsView(dt);
+		ArrayList<BDaumNewsDto> daumNewsDtos = dao.daumNewsView(dt);
 		ArrayList<BFacebookNewsDto> facebookArticleDtos = dao.facebookNewsView(dt);
 		ArrayList<BYoutubeNewsDto> bYoutubeArticleDtos = dao.youtubeNewsView(dt);
 		
@@ -49,6 +51,7 @@ public class BReportCommand implements BCommand {
 		request.setAttribute("homepagePv_view", homepagePvDtos);
 		request.setAttribute("homepageArticle_view", homepageArticleDtos);
 		request.setAttribute("naverNews_view", naverNewsDtos);
+		request.setAttribute("daumNews_view", daumNewsDtos);
 		request.setAttribute("facebookArticle_view", facebookArticleDtos);
 		request.setAttribute("youtubeArticle_view", bYoutubeArticleDtos);		
 	}

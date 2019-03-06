@@ -178,6 +178,33 @@
           </div>
         </div>        
       </div>
+      <!-- daum 주요 기사-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> 다음 인기 기사</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="text-center">기사</th>
+                  <th class="text-center">조회수</th>
+                  <th class="text-center">기자</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${daumNews_view}" var="daumNewsdto">
+                <tr>                  
+                  <td><a href="${daumNewsdto.url}" target="_blank">${daumNewsdto.title}</a></td>
+                  <td class="text-center"><fmt:formatNumber value="${daumNewsdto.pv}" pattern="#,###" /></td>
+                  <td class="text-center">${daumNewsdto.reporter}</td>                  
+                </tr>
+                </c:forEach>	                
+              </tbody>
+            </table>
+          </div>
+        </div>        
+      </div>
       <!-- 페이스북 주요 기사-->
       <div class="card mb-3">
         <div class="card-header">

@@ -10,6 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.kbs.dna.dto.BDaumNewsDto;
 import com.kbs.dna.dto.BDto;
 import com.kbs.dna.dto.BFacebookNewsDto;
 import com.kbs.dna.dto.BHomepageNewsDto;
@@ -451,7 +452,6 @@ public class BDao {
 		return dtos;
 	}
 	
-	
 	public String calculatePreviousDay(String dt, int day){
 		
 		String sDay = null;
@@ -709,6 +709,225 @@ public class BDao {
 				int pv = resultSet.getInt("pv");
 				
 				dto = new BNaverNewsDto(docid, dt, title, url, reporter, pv);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}	
+	public void daum_write(String dt, String title, String url, String reporter, String pv) {
+		// TODO Auto-generated method stub
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			String query = "insert into daum_news (dt, title, url, reporter, pv) values (?, ?, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, dt);
+			preparedStatement.setString(2, title);
+			preparedStatement.setString(3, url);
+			preparedStatement.setString(4, reporter);
+			preparedStatement.setInt(5, Integer.parseInt(pv));
+			int rn = preparedStatement.executeUpdate();
+			System.out.println(query);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}		
+	}
+	
+	public ArrayList<BDaumNewsDto> daum_list() {
+		
+		ArrayList<BDaumNewsDto> dtos = new ArrayList<BDaumNewsDto>();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String query = "select * from daum_news order by dt desc;";
+			preparedStatement = connection.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				int docid = resultSet.getInt("docid");
+				String title = resultSet.getString("title");
+				String dt = resultSet.getString("dt");
+				String url = resultSet.getString("url");
+				String reporter = resultSet.getString("reporter");
+				int pv = resultSet.getInt("pv");
+								
+				BDaumNewsDto dto = new BDaumNewsDto(docid, dt, title, url, reporter, pv);
+				dtos.add(dto);
+			}			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+	
+	public BDaumNewsDto daum_contentView(String reqDocid) {
+		
+		BDaumNewsDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			String query = "select * from daum_news where docid = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, reqDocid);
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				int docid = resultSet.getInt("docid");
+				String dt = resultSet.getString("dt");
+				String title = resultSet.getString("title");
+				String url = resultSet.getString("url");
+				String reporter = resultSet.getString("reporter");
+				int pv = resultSet.getInt("pv");				
+				
+				dto = new BDaumNewsDto(docid, dt, title, url, reporter, pv);				
+			}			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}
+	
+	public void daum_modify(String docid, String dt, String title, String reporter, String pv, String url) {
+		// TODO Auto-generated method stub
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String query = "update daum_news set title = ?, dt = ?, reporter = ? , url = ? , pv = ? where docid = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, title);
+			preparedStatement.setString(2, dt);
+			preparedStatement.setString(3, reporter);
+			preparedStatement.setString(4, url);
+			preparedStatement.setInt(5, Integer.parseInt(pv));
+			preparedStatement.setInt(6, Integer.parseInt(docid));
+			
+			int rn = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+	
+	public void daum_delete(String docid) {
+		// TODO Auto-generated method stub
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {			
+			connection = dataSource.getConnection();
+			String query = "delete from daum_news where docid = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(docid));
+			int rn = preparedStatement.executeUpdate();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+	
+	public ArrayList<BDaumNewsDto> daumNewsView(String strDT) {		
+		
+		// 전날 날짜 받아오기 
+		String sPreviousDay = calculatePreviousDay(strDT, 1);
+		
+		ArrayList<BDaumNewsDto> dtos = new ArrayList<BDaumNewsDto>();
+		BDaumNewsDto dto = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		
+		System.out.println(sPreviousDay);
+		
+		try {			
+			connection = dataSource.getConnection();
+			
+			String query = "select * from daum_news where dt = ? order by pv desc limit 6";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, sPreviousDay);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				int docid = resultSet.getInt("docid");
+				String title = resultSet.getString("title");
+				String url = resultSet.getString("url");
+				String dt = resultSet.getString("dt");
+				String reporter = resultSet.getString("reporter");				
+				int pv = resultSet.getInt("pv");
+				
+				dto = new BDaumNewsDto(docid, dt, title, url, reporter, pv);
 				dtos.add(dto);
 			}
 			

@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.kbs.dna.command.BCommand;
 import com.kbs.dna.command.BContentCommand;
+import com.kbs.dna.command.BDaumContentCommand;
+import com.kbs.dna.command.BDaumDeleteCommand;
+import com.kbs.dna.command.BDaumListCommand;
+import com.kbs.dna.command.BDaumModifyCommand;
+import com.kbs.dna.command.BDaumWriteCommand;
 import com.kbs.dna.command.BDeleteCommand;
 import com.kbs.dna.command.BListCommand;
 import com.kbs.dna.command.BModifyCommand;
@@ -112,6 +117,28 @@ public class BFrontController extends HttpServlet {
 			command = new BNaverDeleteCommand();
 			command.execute(request, response);
 			viewPage = "naver_list.do";
+		} else if(com.equals("/daum_write_view.do")) {   // ø©±‚º≠∫Œ≈Õ daum ƒ‹≈Ÿ√˜ ¿‘∑¬
+			viewPage = "daum_write_view.jsp";
+		} else if(com.equals("/daum_write.do")) {
+			command = new BDaumWriteCommand();
+			command.execute(request, response);
+			viewPage = "daum_list.do";
+		} else if(com.equals("/daum_list.do")) {
+			command = new BDaumListCommand();
+			command.execute(request, response);
+			viewPage = "daum_list.jsp";
+		} else if(com.equals("/daum_content_view.do")){
+			command = new BDaumContentCommand();
+			command.execute(request, response);
+			viewPage = "daum_content_view.jsp";
+		} else if(com.equals("/daum_modify.do")) {
+			command = new BDaumModifyCommand();
+			command.execute(request, response);
+			viewPage = "daum_list.do";
+		} else if(com.equals("/daum_delete.do")) {
+			command = new BDaumDeleteCommand();
+			command.execute(request, response);
+			viewPage = "daum_list.do";
 		} 
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
